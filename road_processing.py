@@ -18,7 +18,7 @@ def process_frame(frame, display, compass, template_counter, template_counter2,
     edges = cv2.Canny(gray, 25, 175)
     lines = cv2.HoughLinesP(edges, rho=1, theta=np.pi/180, threshold=25, minLineLength=10, maxLineGap=250)
 
-    # Reverse perspective transformation for lines
+    # Calculate and display lines
     positives = []
     negatives = []
     if lines is not None:
@@ -29,7 +29,7 @@ def process_frame(frame, display, compass, template_counter, template_counter2,
                 m = (y2-y1)/(x2-x1)
             except ZeroDivisionError:
                 m = 99999999999999999
-            # Uses slope to split up lines, postives are left lane and negatives are right
+            # Uses slope to split up lines, positives are left lane and negatives are right
             if (m < -2.5 and m > -18):
                 negatives.append([x1, y1, x2, y2])
             elif (m > 1 and m < 4):
@@ -129,6 +129,7 @@ def process_frame(frame, display, compass, template_counter, template_counter2,
             template_counter = -30
             display += 1
             compass = "right"
+
     if len(boxes2) > 0:
         template_counter2 += 1
         print("Left")
@@ -155,7 +156,7 @@ def process_frame(frame, display, compass, template_counter, template_counter2,
 # Initialize template images and values
 temp = cv2.imread('right_arrow.png')
 W, H = temp.shape[:2]
-temp2 = cv2.imread("../GUI with Image Overlay/left_arrow.png")
+temp2 = cv2.imread("left_arrow.png")
 W2, H2 = temp.shape[:2]
 thresh = 0.5
 thresh2 = 0.62
@@ -172,7 +173,7 @@ px1_below_threshold_count = 0
 px1_threshold = 250
 
 
-#Works Cited:
+# Works Cited:
 # Perspective Transform: https://www.geeksforgeeks.org/perspective-transformation-python-opencv/
 # lines 9-14 & 78-94
 # Template Matching: https://www.geeksforgeeks.org/multi-template-matching-with-opencv/
